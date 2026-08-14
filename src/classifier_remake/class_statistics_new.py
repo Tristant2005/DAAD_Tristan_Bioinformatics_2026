@@ -14,21 +14,23 @@ import json
 from collections import defaultdict
 import os
 import statistics as st
+import cv2
 
 
-
-# CLASSES = {
-#     0:"root",                
-#     1:"root_hair",            
-#     2:"bump",   
-#     3:"background_root_hair", 
-#     4:"tangled_root_hair",                 
-#     5:"edge_root_hair",                 
-#     6:"embedded_root_hair",               
-#     7:"bubble",   
-#     8:"dirt"    
-# }
-
+'''
+# for reference
+CLASSES = {
+    0:"root",                
+    1:"root_hair",            
+    2:"bump",   
+    3:"background_root_hair", 
+    4:"tangled_root_hair",                 
+    5:"edge_root_hair",                 
+    6:"embedded_root_hair",               
+    7:"bubble",   
+    8:"dirt"    
+}
+'''
 
 ### FUNCTIONS ###
 
@@ -91,30 +93,28 @@ def get_stats(categories, json_data="/home/mellanie/Desktop/Tristan_2026_code/de
 
             # print(category)
         
-            if category not in categories: continue
+            if category not in categories: 
+                continue
 
-            #     points = np.array(polygon["points"])
-            #     height = data["imageHeight"]
-            #     width = data["imageWidth"]
 
             mask = segmentation_to_mask(points, height, width)
             labeled = label(mask)
 
-            #     img_num = os.path.basename(ann) # get img for intensity
-            #     img_num = img_num.removesuffix(".json")
-            #     nitrate_conc = {0: 128, 1: 4, 2: 16, 3: 32, 4: 64}.get(i % 5)
-            #     image_path = f"/home/mellanie/Desktop/annotations/Images/20250409_N{nitrate_conc}_Plate{i}_DAG6_1000_L/{img_num}.tif"
-
-            image = io.imread(img_file_path)
+    
+            image = cv2.imread(img_file_path)
             gray_image = rgb2gray(image) if image.ndim == 3 else image
 
             props = regionprops(labeled, intensity_image = gray_image)
 
 
+            # get info about 
             if props:
                 largest = max(props, key=lambda p: p.area)
                 e = largest.eccentricity
-                ar = largest.axis_major_length/props[0].axis_minor_length
+                try:
+                    ar = largest.axis_major_length/props[0].axis_minor_length
+                except:
+                    ar = 0
                 area = largest.area
                 intensity = largest.intensity_mean
                 aml = largest.axis_major_length
@@ -122,28 +122,16 @@ def get_stats(categories, json_data="/home/mellanie/Desktop/Tristan_2026_code/de
                 stats.append({"class": category, "ecotype": ecotype, "pixels": pixels, "area": area, "eccentricity": e,
                                 "intensity": intensity, "axis_major_length": aml, "aspect_ratio": ar})
 
-              
-
+            
 
     if stats:
         results = pd.DataFrame(stats)
         results.to_csv(f"/home/mellanie/Desktop/Tristan_2026_code/src/classifier_remake/stats_in_csv/{categories[0]}_{categories[1]}_stats.csv", index=False)
 
 
-# def get_dist_from_root(data, object):
-
-#     for polygon in data["shapes"]:
-#         if polygon["label"] == "root":
-#             root = Polygon(polygon["points"])
-#             break  # only get the first root
-
-#     pt_coords = object["points"][0]  # Point[0] should be base of hair...
-#     pt = Point(pt_coords)
-#     dist = root.distance(pt)
-
-#     return dist
 
 # if __name__ == "__main__":
 
+# change these categories to change what the classifiers look for
+# get_stats(["root_hair", "background_root_hair"])
 get_stats(["embedded_root_hair", "bump"])
-

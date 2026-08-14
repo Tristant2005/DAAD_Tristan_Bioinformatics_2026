@@ -256,9 +256,9 @@ def instance_regions(hair_mask, root_mask, min_length=20, verbose=False) -> list
         area = np.sum(trimmed > 0)
         if area >= 5000:
             # these are probrabally tangled root hairs. we should preserve these
-            masks.append(instance_mask.astype(bool))
+            # masks.append(instance_mask.astype(bool))
 
-            # continue
+            continue
 
         if area <= 1000:
             continue

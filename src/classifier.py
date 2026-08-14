@@ -169,9 +169,9 @@ class Category_Classifier():
 
             if area >= 5000:
                 # Tangled root hairs
-                labels.append(4)
+                # labels.append(4)
 
-                # labels.append(-1)
+                labels.append(-1)
                 continue
             
             # determine edge hairs
