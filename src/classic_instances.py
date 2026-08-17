@@ -137,7 +137,11 @@ def trace_hair_from_base(skeleton, start_y, start_x, direction='above',
 
 def algorithm_4(trimmed, location, min_gap=15, search_radius=3, verbose=False):
     """
-    ALGORITHM 4 
+    ALGORITHM 4
+
+    This is an algorithm I made myself to try to tackle tangled root hairs.
+    It sweeps a line starting from the root towards the direction of the root hair.
+    If more than one root hairs is found, follow the skeletop branches of each 
     """
 
     DILATION_RADIUS = 2
@@ -229,7 +233,7 @@ def algorithm_4(trimmed, location, min_gap=15, search_radius=3, verbose=False):
 
 
 
-def instance_regions(hair_mask, root_mask, min_length=20, verbose=False) -> list:
+def instance_regions(hair_mask, root_mask, min_length=20, tangled=False, verbose=False) -> list:
     """
     Label connected components, filter small ones, detect multiple instances.
     
@@ -256,9 +260,12 @@ def instance_regions(hair_mask, root_mask, min_length=20, verbose=False) -> list
         area = np.sum(trimmed > 0)
         if area >= 5000:
             # these are probrabally tangled root hairs. we should preserve these
-            # masks.append(instance_mask.astype(bool))
-
-            continue
+            if tangled:
+                masks.append(instance_mask.astype(bool)) 
+            
+            # or skip for no tangle
+            else:
+                continue
 
         if area <= 1000:
             continue

@@ -41,12 +41,13 @@ def get_dist_from_root(root_mask, hair_instance):
 class Category_Classifier():
 
     def __init__(self, hair_masks, hair_cases, root_mask, img_path,
-                 bump_embedded_classifier_path, bg_regular_classifier_path):
+                 bump_embedded_classifier_path, bg_regular_classifier_path, tangled):
 
         self.hair_masks = hair_masks
         self.hair_cases = hair_cases
         self.root_mask = root_mask
         self.img_path = img_path
+        self.tangled = tangled
 
         self.bump_embedded_classifier = bump_embedded_classifier_path
         self.bg_regular_classifier = bg_regular_classifier_path
@@ -169,9 +170,13 @@ class Category_Classifier():
 
             if area >= 5000:
                 # Tangled root hairs
-                # labels.append(4)
+                if self.tangled:
+                    labels.append(4)
 
-                labels.append(-1)
+                # or skip for no tangle
+                else:
+                    labels.append(-1)
+
                 continue
             
             # determine edge hairs
@@ -220,7 +225,7 @@ def load_classifiers(bmp_cls="../classification/classifiers/bumps_embedded_class
     return bump_embedded_classifier, bg_regular_classifier
 
 
-def classify_instances(instances, root, img_path, classifier):
+def classify_instances(instances, root, img_path, classifier, tangled=False):
     hair_masks = [item["mask"] for item in instances]
     hair_cases = [item["case"] for item in instances]
 
@@ -228,6 +233,7 @@ def classify_instances(instances, root, img_path, classifier):
     classifier.hair_masks = hair_masks
     classifier.hair_cases = hair_cases
     classifier.root_mask = root
+    classifier.tangled = tangled
 
     # Run the classifier class
     catagory_list = classifier.detect_classes()
@@ -237,9 +243,13 @@ def classify_instances(instances, root, img_path, classifier):
         if category == -1:
             continue
 
+        # if category == 0:
+        #     continue
+
         item["category_id"] = category
         kept_instances.append(item)
 
+    # Append the classic root
     kept_instances.append({
         "mask":           root > 0,
         "case":           "B",
@@ -251,4 +261,5 @@ def classify_instances(instances, root, img_path, classifier):
         "model_instance": None,
         "class_instance": None,
     })
+
     return kept_instances

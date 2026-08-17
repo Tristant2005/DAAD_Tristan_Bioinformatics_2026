@@ -4,7 +4,7 @@ import numpy as np
 import cv2
 from matplotlib import pyplot as plt
 from src.model_run import CLASSES
-
+from src.segmentation_pipeline import dilate_mask
 
 # Take the instances output by the model and place them in a custom json-like format
 def load_model_instances(instances: list[dict], detectron_confidence_threshold: float = 0.5) -> dict:
@@ -19,7 +19,15 @@ def load_model_instances(instances: list[dict], detectron_confidence_threshold: 
     for mask, score, category, box in zip(instances.pred_masks, instances.scores, instances.pred_classes, instances.pred_boxes.tensor):
         if float(score) < detectron_confidence_threshold:
             continue
-        masks.append(mask.numpy().astype(bool))
+
+        mask = mask.numpy().astype(bool)
+
+        # keep these 2 lines only if you want to dilate mask
+        # dilation_radius = 2
+        # mask = dilate_mask(mask, dilation_radius)
+
+
+        masks.append(mask)
         scores.append(float(score))
 
         # shift all indexes by one to account for the root class being slotted in
