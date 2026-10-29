@@ -1,5 +1,9 @@
 # DAAD_Tristan_Bioinformatics_2026
 
+<!-- 
+Acknowledgements:
+This work is being done for the university of Potsdam, with supervison from Boyana Kozhuharova and aid from Mellanie Martin -->
+
 
 the main file is pipeline.ipynb which includes example runs. Please note that your system must have all the correct requirements included in the requirements.txt file. You must also take note that facebook's Detectron 2 model is native to Linux and MacOS. If you are using a windows computer you will need to install Detectron2 through another service.
 
@@ -10,6 +14,7 @@ There are 2 main ways to use this program:
 1.) Runs from file paths parsed in by you
 
 ```
+# in pipeline.ipynb
 image = "/home/mellanie/Desktop/Annotated_dataset/20241002_N4_Plate1_DAG6_1000_L/000007.tif"
 fused_classified_instances, model_instances, classic_masks = instance_segmentation_pipeline(image, verbose=False)
 ```
@@ -17,13 +22,14 @@ fused_classified_instances, model_instances, classic_masks = instance_segmentati
 2.) Runs from a json file containing image paths and their corresponding labelme annotations 
 
 ```
+# in pipeline.ipynb
 json_file = "/home/mellanie/Desktop/Tristan_2026_code/detectron2/training&testing_data/model2.5_data/genotypes_at_end_of_Tristan's_term/test.json"
 make_coco_outputs(json_file) # calls instance_segmentation_pipeline()
 ```
 
 As you can see below in this figure, once you have your outputs from **pipeline.ipynb** (bottom center) you can feed them into **compare_json_files.ipynb** to recieve csv files based on the analysis of predicted segments compared to the annotated labelme segemnts.
 
-![Flowchart](Pipeline.drawio.svg)
+![Flowchart](extras/Pipeline.drawio.svg)
 
 In the compare_json_files.ipynb file you will see a config cell. Keep in mind you will only have comparisons if the image you're analyzing already had labelme annotations. For example, if you were running the pipeline on unannotated images, you would have no reason to proceed further here. 
 
@@ -31,6 +37,7 @@ the GT_JSON should be the same json file you used in **pipeline.ipynb** to gener
 
 For the example above, this would be the configuration:
 ```
+# in compare_json_files.ipynb
 GT_JSON   = "/home/mellanie/Desktop/Tristan_2026_code/detectron2/training&testing_data/model2.5_data/genotypes_at_end_of_Tristan's_term/test.json"
 PRED_JSON = "/home/mellanie/Desktop/Tristan_2026_code/outputs/model2.5_final_23_genotypes.json"
 ```
@@ -39,7 +46,7 @@ PRED_JSON = "/home/mellanie/Desktop/Tristan_2026_code/outputs/model2.5_final_23_
 There are also some optional configurations that I reccomend not touching whith the exception of IS_FUSED, which should be True if and only if you're using the FUSED_OUTPUT path:
 
 ```
-# example
+# in compare_json_files.ipynb
 IOU_THRESHOLD = 0.50 # use 0.50 for standard COCO; 0.35 suits thin root-hair structures
 OUTPUT_CSV = "analysis/csv_data_for_analysis/final_model_output_no_tangles.csv"
 IS_FUSED = False
