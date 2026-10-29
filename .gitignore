@@ -9,3 +9,5 @@ venv
 venv/*
 local_files
 local_files/*
+models
+models/*
