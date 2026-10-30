@@ -3,11 +3,8 @@ detectron2/kfold_splits/
 detectron2/kfold_runs/
 detectron2/Plating_2026-06-30.csv
 detectron2/kfold_search_results.json
-outputs/
 **/__pycache__/
 venv
 venv/*
-local_files
-local_files/*
 models
 models/*

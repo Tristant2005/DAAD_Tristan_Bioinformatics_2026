@@ -31,7 +31,7 @@ As you can see below in this figure, once you have your outputs from **pipeline.
 
 ![Flowchart](extras/Pipeline.drawio.svg)
 
-In the compare_json_files.ipynb file you will see a config cell. Keep in mind you will only have comparisons if the image you're analyzing already had labelme annotations. For example, if you were running the pipeline on unannotated images, you would have no reason to proceed further here. 
+In the **compare_json_files.ipynb** file you will see a config cell. Keep in mind you will only have comparisons if the image you're analyzing already had labelme annotations. For example, if you were running the pipeline on unannotated images, you would have no reason to proceed further here. 
 
 the GT_JSON should be the same json file you used in **pipeline.ipynb** to generate your predictions. The PRED_JSON path will be the direct output you got from the piepline. You should have 3 paths at your disposal, FUSION_OUTPUT, MODEL_OUTPUT, and FUSION_OUTPUT. If you don't know what or where these are, check the bottom of the config cell in pipeline.ipynb.
 
@@ -66,7 +66,7 @@ Your OUTPUT_CSV path, assuming everything goes well, should be a final table wit
 I have rounded the numbers to 4 decimal places in this example. This example csv would contains all the necessary information to build plots displaying statistics for the model's final performance.
 
 A note on definitions:
-instance based: for all root hair instances, how many were found?
-pixel based: within matched instances, how many pixels are right?
-global based: for all pixels on the image, how many pixels are right?
-total: micro-average of all genotype scores
+- instance based: for all root hair instances, how many were found?
+- pixel based: within matched instances, how many pixels are right?
+- global based: for all pixels on the image, how many pixels are right?
+- total: micro-average of all genotype scores

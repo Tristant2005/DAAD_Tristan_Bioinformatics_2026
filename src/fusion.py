@@ -3,8 +3,21 @@ from scipy.optimize import linear_sum_assignment
 import numpy as np
 import cv2
 from matplotlib import pyplot as plt
-from src.model_run import CLASSES
 from src.segmentation_pipeline import dilate_mask
+
+
+# These are the final classes in order
+CLASSES = [
+    "root",                
+    "root_hair",            
+    "bump",   
+    "background_root_hair", 
+    "tangled_root_hair",                 
+    "edge_root_hair",                 
+    "embedded_root_hair",               
+    "bubble",   
+    "dirt"    
+]
 
 # Take the instances output by the model and place them in a custom json-like format
 def load_model_instances(instances: list[dict], detectron_confidence_threshold: float = 0.5) -> dict:
@@ -15,6 +28,9 @@ def load_model_instances(instances: list[dict], detectron_confidence_threshold: 
     categories = []
     boxes = []
 
+    if instances == []:
+        return {"masks": masks, "scores": scores, "classes": categories, "box": boxes}
+    
     # iterate through instances from the Detectron2 model 
     for mask, score, category, box in zip(instances.pred_masks, instances.scores, instances.pred_classes, instances.pred_boxes.tensor):
         if float(score) < detectron_confidence_threshold:

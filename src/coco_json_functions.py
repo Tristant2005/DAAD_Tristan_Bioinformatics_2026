@@ -1,11 +1,22 @@
 import numpy as np
 import json
 from pycocotools import mask as mask_utils
-from src.model_run import CLASSES
 from pathlib import Path
 import cv2
 import pycocotools.mask as maskUtils
 
+# These are the final classes in order
+CLASSES = [
+    "root",                
+    "root_hair",            
+    "bump",   
+    "background_root_hair", 
+    "tangled_root_hair",                 
+    "edge_root_hair",                 
+    "embedded_root_hair",               
+    "bubble",   
+    "dirt"    
+]
 
 def mask_to_coco_polygons(binary_mask, epsilon=2.0):
     """
@@ -98,6 +109,10 @@ def export_to_coco(instances, file_path, categories, image_id = 0, width = 2048,
 
 def write_coco_dataset(images, annotations, categories, output_path):
     """Write the accumulated dataset-wide COCO structure to disk."""
+
+    import os
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+
     coco = {
         "images": images,
         "annotations": annotations,
