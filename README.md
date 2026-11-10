@@ -9,6 +9,19 @@ the main file is pipeline.ipynb which includes example runs. Please note that yo
 
 The most important file in this repository is **pipeline.ipynb**. This program conatains code for the *instance_segmentation_pipeline()* function which will point you to all the files and functions that run the entire segmentation pipeline. Another important function is *make_coco_outputs()* which will run the segmentation function and output to json format. Example uses are stored at the end of the pipeline.ipynb. Please note that not all code is doccumented at the moment. 
 
+
+# Setup
+Make sure you are using python3.11 or it will not work.
+
+
+```
+# in linux shell
+python3 -m venv venv
+source venv/bin/activate
+# optional: pip install --upgrade pip
+pip install -r requirements.txt
+```
+
 There are 2 main ways to use this program:
 
 1.) Runs from file paths parsed in by you
