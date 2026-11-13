@@ -25,6 +25,7 @@ def instance_segmentation_pipeline(img_path,
                                     tangled=False,
                                     verbose=False,
                                     fusion_iou_threshold = 0.1,
+                                    fusion_version=1,
                                     detectron_confidence_threshold = 0.0, 
                                     is_stitched=False,
                                     show_overlay=True):
@@ -46,7 +47,7 @@ def instance_segmentation_pipeline(img_path,
 
     #4. Fusion
     fused_instances = fusion_of_masks(classic_masks, model_instances, iou_threshold=fusion_iou_threshold,
-                                      detectron_confidence_threshold=detectron_confidence_threshold)
+                                      version=fusion_version, detectron_confidence_threshold=detectron_confidence_threshold)
 
     # 5. Classify
     classified_instances = classify_instances(fused_instances, root, img_path, classifier, tangled)
